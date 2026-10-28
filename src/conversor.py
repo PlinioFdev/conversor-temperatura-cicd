@@ -23,6 +23,10 @@ def kelvin_para_celsius(kelvin: float) -> float:
     return kelvin + ZERO_KELVIN_EM_CELSIUS
 
 
+def celsius_para_rankine(celsius: float) -> float:
+    return celsius_para_kelvin(celsius) * 9 / 5
+
+
 def converter(valor: float, origem: str, destino: str) -> float:
     origem = origem.upper()
     destino = destino.upper()
