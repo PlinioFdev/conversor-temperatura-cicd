@@ -5,6 +5,7 @@ from src.conversor import (
     fahrenheit_para_celsius,
     celsius_para_kelvin,
     kelvin_para_celsius,
+    celsius_para_rankine,
     converter,
 )
 
@@ -52,3 +53,7 @@ def test_converter_fahrenheit_para_kelvin():
 def test_converter_unidade_invalida_gera_erro():
     with pytest.raises(ValueError):
         converter(10, "C", "X")
+
+
+def test_celsius_para_rankine():
+    assert celsius_para_rankine(0) == pytest.approx(491.67)
