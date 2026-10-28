@@ -1,0 +1,66 @@
+# Pipeline CI/CD do conversor de temperatura.
+# Dispara em push e pull_request para main e develop.
+name: CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # build: prepara o ambiente, instala dependências e valida que o código
+  # compila sem erro de sintaxe/import. Guarda o código como artefato,
+  # disponível para inspeção/download manual (test e deploy não o usam).
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Validar que o código importa/compila
+        run: python -m compileall src
+
+      - name: Guardar código como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: codigo-fonte
+          path: src/
+
+  # test: roda a suíte de testes com pytest. Só executa se o build passou
+  # (needs: build), garantindo que não testamos código que nem compila.
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Rodar testes
+        run: python -m pytest
+
+  # deploy: simula a publicação da aplicação. Só roda na branch main
+  # (deploy de verdade não deve disparar em toda feature/PR) e depende dos
+  # testes terem passado (needs: test). Usa uma variável de ambiente comum,
+  # sem valor sensível, só para ilustrar onde um secret real entraria.
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    env:
+      AMBIENTE_DEPLOY: producao-simulada
+    steps:
+      - name: Publicar (simulado)
+        run: echo "Publicando conversor de temperatura no ambiente $AMBIENTE_DEPLOY"
