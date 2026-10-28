@@ -1,5 +1,7 @@
 # Conversor de Temperatura
 
+![CI/CD](https://github.com/PlinioFdev/conversor-temperatura-cicd/actions/workflows/ci-cd.yml/badge.svg)
+
 Projeto da atividade da Aula 07 (Cultura e Prática DevOps - UNIPÊ). Mini-app em Python
 que converte temperatura entre Celsius, Fahrenheit e Kelvin, usada para demonstrar uma
 pipeline de CI/CD com GitHub Actions.
